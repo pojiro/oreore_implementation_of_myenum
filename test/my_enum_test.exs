@@ -31,6 +31,7 @@ defmodule MyEnumTest do
     assert MyEnum.to_list(5..1) == [5,4,3,2,1]
     assert MyEnum.to_list(5..5) == [5]
     assert MyEnum.to_list([]) == []
+    assert MyEnum.to_list(%{}) == []
   end
 
   test "reverse/1" do

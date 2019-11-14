@@ -39,10 +39,10 @@ defmodule MyEnum do
   def reduce_while(s..e, acc, fun), do: reduce_while(to_list(s..e), acc, fun)
 
   def to_list(l) when is_list(l), do: l
-  def to_list(m) when is_map(m), do: Map.to_list(m)
   def to_list(e..e), do: [e]
   def to_list(s..e) when s < e, do: [s| to_list(s+1..e)]
   def to_list(s..e) when s > e, do: [s| to_list(s-1..e)]
+  def to_list(m) when is_map(m), do: Map.to_list(m)
 
   def reverse([]), do: []
   def reverse([h|t]), do: reverse(t)++[h]
