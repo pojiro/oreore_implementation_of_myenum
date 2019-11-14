@@ -18,13 +18,10 @@ defmodule MyEnum do
 
   def reduce([], acc , _), do: acc
   def reduce([h|t], acc, fun), do: reduce(t, fun.(h, acc), fun)
-  # def reduce(s..e, acc, fun), do: reduce(to_list(s..e), acc, fun)
-  # def reduce(enumerable, acc, fun) when is_map(enumerable), do: reduce(Map.to_list(enumerable), acc, fun)
   def reduce(enumerable, acc, fun), do: enumerable |> to_list |> reduce(acc, fun)
 
+  def reduce([], _), do: raise(Enum.EmptyError)
   def reduce([h|t], fun), do: reduce(t, h, fun)
-  # def reduce(s..e, fun), do: reduce(to_list(s..e), fun)
-  # def reduce(enumerable, fun) when is_map(enumerable), do: reduce(Map.to_list(enumerable), fun)
   def reduce(enumerable, fun), do: enumerable |> to_list |> reduce(fun)
 
   def reduce_while([], acc, _), do: acc
@@ -36,7 +33,7 @@ defmodule MyEnum do
       true -> reduce_while(t, value, fun)
     end
   end
-  def reduce_while(s..e, acc, fun), do: reduce_while(to_list(s..e), acc, fun)
+  def reduce_while(enumerable, acc, fun), do: enumerable |> to_list |> reduce_while(acc, fun)
 
   def to_list(l) when is_list(l), do: l
   def to_list(e..e), do: [e]
@@ -46,11 +43,9 @@ defmodule MyEnum do
 
   def reverse([]), do: []
   def reverse([h|t]), do: reverse(t)++[h]
-  def reverse(s..e), do: to_list(e..s)
+  def reverse(enumerable), do: enumerable |> to_list |> reverse
   def reverse(enumerable, tail) do
-    enumerable
-    |> reverse
-    |> concat(tail)
+    enumerable |> reverse |> concat(tail)
   end
 
   def map(enumerable, fun) do
@@ -150,7 +145,8 @@ defmodule MyEnum do
   end
 
   def filter(enumerable, fun) do
-    reduce(enumerable, [],
+    enumerable
+    |> reduce([],
       fn x, acc ->
         cond do
           fun.(x)-> [x|acc]
@@ -158,20 +154,21 @@ defmodule MyEnum do
         end
       end
     )
-    |> Enum.reverse
+    |> reverse
   end
 
   def reject(enumerable, fun) do
-    filter(enumerable, fn x -> !(fun.(x)) end)
+    enumerable |> filter(fn x -> !(fun.(x)) end)
   end
 
   def empty?([]), do: true
   def empty?(%{}), do: true
   def empty?(_), do: false
 
-  def count(enumerable), do: reduce(enumerable, 0, fn _, acc -> acc + 1 end)
+  def count(enumerable), do: enumerable |> reduce(0, fn _, acc -> acc + 1 end)
   def count(enumerable, fun) do
-    reduce(enumerable, 0,
+    enumerable
+    |> reduce(0,
       fn x, acc ->
         cond do
           fun.(x) -> acc + 1
@@ -190,7 +187,7 @@ defmodule MyEnum do
     end
   end
   def all?(enumerable, fun) do
-    all?(to_list(enumerable), fun)
+    enumerable |> to_list |> all?(fun)
   end
 
   def any?(enumerable, fun \\ fn x -> x end)
@@ -202,7 +199,7 @@ defmodule MyEnum do
     end
   end
   def any?(enumerable, fun) do
-    any?(to_list(enumerable), fun)
+    enumerable |> to_list |> any?(fun)
   end
 
   def at(enumerable, index, default \\ nil)
@@ -212,18 +209,18 @@ defmodule MyEnum do
     at(t, index-1, default)
   end
   def at(enumerable, index, default) when index < 0 do
-    at(reverse(enumerable), -1*index-1, default)
+    enumerable |> reverse |> at(-1*index-1, default)
   end
 
   def fetch!(enumerable, index) do
-    elem = at(enumerable, index)
+    elem = enumerable |> at(index)
     cond do
       elem == nil -> raise Enum.OutOfBoundsError
       true -> {:ok, elem}
     end
   end
   def fetch(enumerable, index) do
-    elem = at(enumerable, index)
+    elem = enumerable |> at(index)
     cond do
       elem == nil -> :error
       true -> {:ok, elem}
@@ -305,11 +302,11 @@ defmodule MyEnum do
   end
 
   def take(enumerable, amount) when amount < 0 do
-    take(reverse(enumerable), -1*amount)
+    enumerable |> reverse |> take(-1*amount)
   end
   def take(enumerable, amount) do
     cond do
-      count(enumerable) <= amount -> to_list(enumerable)
+      count(enumerable) <= amount -> enumerable |> to_list
       true -> enumerable
               |> reduce({amount, []},
                    fn x, acc={acc1, acc2} ->
@@ -324,7 +321,7 @@ defmodule MyEnum do
   end
 
   def chunk_by(enumerable, fun) do
-    [head|tail] = enumerable
+    [head|tail] = enumerable |> to_list
     tail
     |> reduce([[head]],
          fn x, acc=[head1=[h|_]|t] ->
@@ -356,30 +353,30 @@ defmodule MyEnum do
     chunk_every(enumerable, count, count)
   end
 
-  defp find_impl([], default, _fun, _index), do: {default, default, default}
-  defp find_impl([h|t], default, fun, index) do
+  defp _find([], default, _fun, _index), do: {default, default, default}
+  defp _find([h|t], default, fun, index) do
     value = fun.(h)
     cond do
       value -> {index, value, h}
-      true -> find_impl(t, default, fun, index+1)
+      true -> _find(t, default, fun, index+1)
     end
   end
-  defp find_impl(enumerable, default, fun, index) do
-    find_impl(to_list(enumerable), default, fun, index)
+  defp _find(enumerable, default, fun, index) do
+    enumerable |> to_list |> _find(default, fun, index)
   end
 
   def find(enumerable, default \\ nil, fun) do
-    find_impl(to_list(enumerable), default, fun, 0)
+    enumerable |> to_list |> _find(default, fun, 0)
     |> (fn {_,_,x} -> x end).()
   end
 
   def find_index(enumerable, default \\ nil, fun) do
-    find_impl(to_list(enumerable), default, fun, 0)
+    enumerable |> to_list |> _find(default, fun, 0)
     |> (fn {x,_,_} -> x end).()
   end
 
   def find_value(enumerable, default \\ nil, fun) do
-    find_impl(to_list(enumerable), default, fun, 0)
+    enumerable |> to_list |> _find(default, fun, 0)
     |> (fn {_,x,_} -> x end).()
   end
 
@@ -430,9 +427,7 @@ defmodule MyEnum do
   end
 
   def map_join(enumerable, joiner \\ "", mapper) do
-    enumerable
-    |> map(mapper)
-    |> join(joiner)
+    enumerable |> map(mapper) |> join(joiner)
   end
 
   def intersperse([], _), do: []
