@@ -144,6 +144,16 @@ defmodule MyEnum do
     end
   end
 
+  def min_max_by(enumerable, fun, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+    cond do
+      enumerable |> empty? -> empty_fallback.()
+      true ->
+        min = enumerable |> MyEnum.min_by(fun, empty_fallback)
+        max = enumerable |> MyEnum.max_by(fun, empty_fallback)
+        {min, max}
+    end
+  end
+
   def filter(enumerable, fun) do
     enumerable
     |> reduce([],

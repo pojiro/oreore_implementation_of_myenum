@@ -91,6 +91,12 @@ defmodule MyEnumTest do
     assert MyEnum.min_max([], fn -> {nil, nil} end) == {nil, nil}
   end
 
+  test "min_max_by" do
+    assert MyEnum.min_max_by(["aaa", "bb", "c"], fn x -> String.length(x) end) == {"c", "aaa"}
+    assert MyEnum.min_max_by(["aaa", "a", "bb", "c", "ccc"], &String.length/1) == {"a", "aaa"}
+    assert MyEnum.min_max_by([], &String.length/1, fn -> {nil, nil} end) == {nil, nil}
+  end
+
   test "filter" do
     assert MyEnum.filter(1..10, fn x -> rem(x, 2) == 0 end) == [2,4,6,8,10]
   end
