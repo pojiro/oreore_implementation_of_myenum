@@ -468,6 +468,12 @@ defmodule MyEnum do
     element in (enumerable |> to_list)
   end
 
+  def random(enumerable) do
+    c = enumerable |> count
+    p = :rand.uniform(c) - 1
+    enumerable|> Enum.at(p)
+  end
+
   # def zip(enumerable) do
   #   enumerable
   #   |> reduce([],

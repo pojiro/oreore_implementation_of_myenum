@@ -298,4 +298,11 @@ defmodule MyEnumTest do
     assert MyEnum.member?([:a, :b, :c], :d) == false
   end
 
+  test "random" do
+    :rand.seed(:exsplus, {101, 102, 103})
+    assert MyEnum.random([1, 2, 3]) == 1
+    assert MyEnum.random([1, 2, 3]) == 3
+    assert MyEnum.random(1..1_000) == 556
+  end
+
 end
