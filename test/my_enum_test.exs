@@ -64,7 +64,7 @@ defmodule MyEnumTest do
 
   test "max" do
     assert MyEnum.max([1,5,10,9,4,0]) == 10
-    assert_raise(Enum.EmptyError, fn -> MyEnum.max([]) end)
+    assert_raise(MyEnum.EmptyError, fn -> MyEnum.max([]) end)
     assert MyEnum.max([], fn -> 0 end) == 0
   end
 
@@ -76,7 +76,7 @@ defmodule MyEnumTest do
 
   test "min" do
     assert MyEnum.min([1,5,10,9,4,0]) == 0
-    assert_raise(Enum.EmptyError, fn -> MyEnum.min([]) end)
+    assert_raise(MyEnum.EmptyError, fn -> MyEnum.min([]) end)
     assert MyEnum.min([], fn -> 0 end) == 0
   end
 
@@ -155,7 +155,7 @@ defmodule MyEnumTest do
   test "fetch!/2" do
     assert MyEnum.fetch!([2,4,6], 0) == {:ok, 2}
     assert MyEnum.fetch!([2,4,6], 2) == {:ok, 6}
-    assert_raise(Enum.OutOfBoundsError, fn -> MyEnum.fetch!([2,4,6], 4) end)
+    assert_raise(MyEnum.OutOfBoundsError, fn -> MyEnum.fetch!([2,4,6], 4) end)
   end
   test "fetch/2" do
     assert MyEnum.fetch([2,4,6], 0) == {:ok, 2}

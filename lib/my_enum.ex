@@ -20,7 +20,7 @@ defmodule MyEnum do
   def reduce([h|t], acc, fun), do: reduce(t, fun.(h, acc), fun)
   def reduce(enumerable, acc, fun), do: enumerable |> to_list |> reduce(acc, fun)
 
-  def reduce([], _), do: raise(Enum.EmptyError)
+  def reduce([], _), do: raise(MyEnum.EmptyError)
   def reduce([h|t], fun), do: reduce(t, h, fun)
   def reduce(enumerable, fun), do: enumerable |> to_list |> reduce(fun)
 
@@ -94,11 +94,11 @@ defmodule MyEnum do
   #       end
   #     )
   #end
-  def max(enumerable, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+  def max(enumerable, empty_fallback \\ fn -> raise(MyEnum.EmptyError) end) do
     max_by(enumerable, fn x -> x end, empty_fallback)
   end
 
-  def max_by(enumerable, fun, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+  def max_by(enumerable, fun, empty_fallback \\ fn -> raise(MyEnum.EmptyError) end) do
     cond do
       enumerable |> empty? -> empty_fallback.()
       true ->
@@ -114,11 +114,11 @@ defmodule MyEnum do
     end
   end
 
-  def min(enumerable, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+  def min(enumerable, empty_fallback \\ fn -> raise(MyEnum.EmptyError) end) do
     min_by(enumerable, fn x -> x end, empty_fallback)
   end
 
-  def min_by(enumerable, fun, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+  def min_by(enumerable, fun, empty_fallback \\ fn -> raise(MyEnum.EmptyError) end) do
     cond do
       enumerable |> empty? -> empty_fallback.()
       true ->
@@ -134,7 +134,7 @@ defmodule MyEnum do
     end
   end
 
-  def min_max(enumerable, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+  def min_max(enumerable, empty_fallback \\ fn -> raise(MyEnum.EmptyError) end) do
     cond do
       enumerable |> empty? -> empty_fallback.()
       true ->
@@ -144,7 +144,7 @@ defmodule MyEnum do
     end
   end
 
-  def min_max_by(enumerable, fun, empty_fallback \\ fn -> raise(Enum.EmptyError) end) do
+  def min_max_by(enumerable, fun, empty_fallback \\ fn -> raise(MyEnum.EmptyError) end) do
     cond do
       enumerable |> empty? -> empty_fallback.()
       true ->
@@ -225,7 +225,7 @@ defmodule MyEnum do
   def fetch!(enumerable, index) do
     elem = enumerable |> at(index)
     cond do
-      elem == nil -> raise Enum.OutOfBoundsError
+      elem == nil -> raise MyEnum.OutOfBoundsError
       true -> {:ok, elem}
     end
   end
