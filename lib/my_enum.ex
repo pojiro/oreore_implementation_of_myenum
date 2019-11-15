@@ -507,6 +507,32 @@ defmodule MyEnum do
     end
   end
 
+  def reverse_slice(enumerable, start_index, count) do
+    {hl, tl} = enumerable |> split(start_index)
+    {bl, tl} = tl |> split(count)
+    hl ++ reverse(bl) ++ tl
+  end
+
+  def split(enumerable, count) when count >=0 do
+    enumerable
+    |> reduce_while({[],[]},
+         fn x, acc={hl, tl} ->
+           cond do
+             count(hl) >= count -> {:halt, {hl, enumerable |> slice(x-1..-1)}}
+             true -> {:cont, {[x|hl], tl}}
+           end
+         end
+       )
+    |> (fn {hl, tl} -> {hl |> reverse, tl} end).()
+  end
+  def split(enumerable, count) when count < 0 do
+    count = count(enumerable) + count
+    cond do
+      count < 0 -> {[], enumerable |> to_list}
+      true -> enumerable |> split(count)
+    end
+  end
+
   # def zip(enumerable) do
   #   enumerable
   #   |> reduce([],

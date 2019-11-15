@@ -331,4 +331,16 @@ defmodule MyEnumTest do
     assert MyEnum.slice(1..10, -11, 5) == []
   end
 
+  test "reverse_slice" do
+    assert MyEnum.reverse_slice([1, 2, 3, 4, 5, 6], 2, 4) == [1, 2, 6, 5, 4, 3]
+  end
+
+  test "split" do
+    assert MyEnum.split([1, 2, 3], 2) == {[1, 2], [3]}
+    assert MyEnum.split([1, 2, 3], 10) == {[1, 2, 3], []}
+    assert MyEnum.split([1, 2, 3], 0) == {[], [1, 2, 3]}
+    assert MyEnum.split([1, 2, 3], -1) == {[1, 2], [3]}
+    assert MyEnum.split([1, 2, 3], -5) == {[], [1, 2, 3]}
+  end
+
 end
