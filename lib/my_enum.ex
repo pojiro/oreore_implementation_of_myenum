@@ -357,6 +357,22 @@ defmodule MyEnum do
     |> reverse
   end
 
+  def drop(enumerable, amount) when amount >= 0 do
+    enumerable
+    |> reduce({0, []},
+         fn x, acc={index, list} ->
+           cond do
+             index >= amount -> {index+1, [x|list]}
+             true -> {index+1, list}
+           end
+         end
+       )
+     |> (fn {_, list} -> list |> reverse end).()
+  end
+  def drop(enumerable, amount) when amount < 0 do
+    drop(enumerable|> reverse, -1*amount) |> reverse
+  end
+
   def chunk_by(enumerable, fun) do
     [head|tail] = enumerable |> to_list
     tail

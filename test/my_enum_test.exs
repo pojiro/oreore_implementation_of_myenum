@@ -211,6 +211,14 @@ defmodule MyEnumTest do
     assert MyEnum.take_while([1, 2, 3], fn x -> x < 3 end) == [1, 2]
   end
 
+  test "drop" do
+    assert MyEnum.drop([1, 2, 3], 2) == [3]
+    assert MyEnum.drop([1, 2, 3], 10) == []
+    assert MyEnum.drop([1, 2, 3], 0) == [1, 2, 3]
+    assert MyEnum.drop([1, 2, 3], -1) == [1, 2]
+    assert MyEnum.drop([1, 2, 3], -2) == [1]
+  end
+
   test "dedup/1" do
     assert MyEnum.dedup([1, 2, 3, 3, 2, 1]) == [1, 2, 3, 2, 1]
     assert MyEnum.dedup([1, 1, 2, 2.0, :three, :three]) == [1, 2, 2.0, :three]
