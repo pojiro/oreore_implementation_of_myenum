@@ -387,6 +387,11 @@ defmodule MyEnum do
     |> (fn {_, list} -> list |> reverse end).()
   end
 
+  def drop_while(enumerable, fun) do
+    index = find_index(enumerable, fn x -> !fun.(x) end)
+    enumerable |> slice(index..-1)
+  end
+
   def chunk_by(enumerable, fun) do
     [head|tail] = enumerable |> to_list
     tail
