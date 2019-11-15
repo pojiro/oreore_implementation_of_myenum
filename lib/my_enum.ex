@@ -373,6 +373,20 @@ defmodule MyEnum do
     drop(enumerable|> reverse, -1*amount) |> reverse
   end
 
+  def drop_every(enumerable, 0), do: enumerable |> to_list
+  def drop_every(enumerable, nth) do
+    enumerable
+    |> reduce({0, []},
+         fn x, acc={index, list} ->
+           cond do
+             rem(index, nth) == 0 -> {index+1, list}
+             true -> {index+1, [x|list]}
+           end
+         end
+       )
+    |> (fn {_, list} -> list |> reverse end).()
+  end
+
   def chunk_by(enumerable, fun) do
     [head|tail] = enumerable |> to_list
     tail
