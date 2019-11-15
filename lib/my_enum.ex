@@ -408,18 +408,31 @@ defmodule MyEnum do
   end
 
   def chunk_every(enumerable, count, step, leftover \\ []) do
-    [head|tail] = enumerable |> to_list
-    tail
-    |> reduce([[head]],
-         fn x, acc=[h|t] ->
+    c = enumerable |> count
+
+    enumerable =
+      cond do
+        leftover == :discard -> (enumerable |> to_list) ++ [:discard]
+        true -> enumerable ++ leftover
+      end
+
+    enumerable
+    |> reduce_while({0, []},
+         fn x, acc={index, list} ->
            cond do
-             count(h) < count -> [[x|h]|t]
-             true -> [[x]|acc]
+             index < c -> {:cont, {index + step, [slice(enumerable, index, count)|list]}}
+             true -> {:halt, acc}
            end
          end
        )
-    |> map(fn x -> reverse(x) end)
-    |> reverse
+    |> (
+         fn {_, list=[h|t]} ->
+           cond do
+             :discard in h -> t |> reverse
+             true -> list |> reverse
+           end
+         end
+       ).()
   end
   def chunk_every(enumerable, count) do
     chunk_every(enumerable, count, count)

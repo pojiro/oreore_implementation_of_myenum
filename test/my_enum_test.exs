@@ -246,11 +246,11 @@ defmodule MyEnumTest do
 
   test "chunk_every" do
     assert MyEnum.chunk_every([1, 2, 3, 4, 5, 6], 2) == [[1, 2], [3, 4], [5, 6]]
-    #assert MyEnum.chunk_every([1, 2, 3, 4, 5, 6], 3, 2, :discard) == [[1, 2, 3], [3, 4, 5]]
-    # assert MyEnum.chunk_every([1, 2, 3, 4, 5, 6], 3, 2, [7]) == [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
-    # assert MyEnum.chunk_every([1, 2, 3, 4], 3, 3, []) == [[1, 2, 3], [4]]
-    # assert MyEnum.chunk_every([1, 2, 3, 4], 10) == [[1, 2, 3, 4]]
-    # assert MyEnum.chunk_every([1, 2, 3, 4, 5], 2, 3, []) == [[1, 2], [4, 5]]
+    assert MyEnum.chunk_every([1, 2, 3, 4, 5, 6], 3, 2, :discard) == [[1, 2, 3], [3, 4, 5]]
+    assert MyEnum.chunk_every([1, 2, 3, 4, 5, 6], 3, 2, [7]) == [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+    assert MyEnum.chunk_every([1, 2, 3, 4], 3, 3, []) == [[1, 2, 3], [4]]
+    assert MyEnum.chunk_every([1, 2, 3, 4], 10) == [[1, 2, 3, 4]]
+    assert MyEnum.chunk_every([1, 2, 3, 4, 5], 2, 3, []) == [[1, 2], [4, 5]]
   end
 
   test "find" do
