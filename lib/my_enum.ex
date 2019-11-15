@@ -474,6 +474,39 @@ defmodule MyEnum do
     enumerable|> Enum.at(p)
   end
 
+  def slice(enumerable, s..e) do
+    cond do
+      s >=0 and e < 0 ->
+        e = count(enumerable) + e + 1
+        slice(enumerable, s, s..e)
+      s < 0 and e >= 0 ->
+        s = count(enumerable) + s + 1
+        slice(enumerable, s, s..e)
+      true -> slice(enumerable, s, (e-s)+1)
+    end
+  end
+
+  def slice(enumerable, start_index, amount) when start_index >= 0 do
+    enumerable
+    |> reduce_while({0,[]},
+         fn x, _acc={index, list} ->
+           cond do
+             count(list) >= amount -> {:halt, {index+1, list}}
+             index >= start_index -> {:cont, {index+1, [x|list]}}
+             true -> {:cont, {index+1, list}}
+           end
+         end
+       )
+    |> (fn {_, list} -> list |> reverse end).()
+  end
+  def slice(enumerable, start_index, amount) when start_index < 0 do
+    start_index = count(enumerable) + start_index
+    cond do
+      start_index < 0 -> []
+      true -> slice(enumerable, start_index, amount)
+    end
+  end
+
   # def zip(enumerable) do
   #   enumerable
   #   |> reduce([],

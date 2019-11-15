@@ -305,4 +305,30 @@ defmodule MyEnumTest do
     assert MyEnum.random(1..1_000) == 556
   end
 
+  test "slice/2" do
+    assert MyEnum.slice(1..100, 5..10) == [6, 7, 8, 9, 10, 11]
+    assert MyEnum.slice(1..10, 5..20) == [6, 7, 8, 9, 10]
+    # last five elements (negative indexes)
+    assert MyEnum.slice(1..30, -5..-1) == [26, 27, 28, 29, 30]
+    # last five elements (mixed positive and negative indexes)
+    assert MyEnum.slice(1..30, 25..-1) == [26, 27, 28, 29, 30]
+    # out of bounds
+    assert MyEnum.slice(1..10, 11..20) == []
+    # index_range.first is greater than index_range.last
+    assert MyEnum.slice(1..10, 6..5) == []
+  end
+
+  test "slice/3" do
+    assert MyEnum.slice(1..100, 5, 10) == [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    # amount to take is greater than the number of elements
+    assert MyEnum.slice(1..10, 5, 100) == [6, 7, 8, 9, 10]
+    assert MyEnum.slice(1..10, 5, 0) == []
+    # using a negative start index
+    assert MyEnum.slice(1..10, -6, 3) == [5, 6, 7]
+    # out of bound start index (positive)
+    assert MyEnum.slice(1..10, 10, 5) == []
+    # out of bound start index (negative)
+    assert MyEnum.slice(1..10, -11, 5) == []
+  end
+
 end
