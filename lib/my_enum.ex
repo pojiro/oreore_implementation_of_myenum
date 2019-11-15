@@ -330,6 +330,20 @@ defmodule MyEnum do
     end
   end
 
+  def take_every(enumerable, 0), do: []
+  def take_every(enumerable, nth) do
+    enumerable
+    |> reduce({0, []},
+         fn x, _acc={index, list} ->
+           cond do
+             rem(index, nth) == 0 -> {index+1, [x|list]}
+             true -> {index+1, list}
+           end
+         end
+       )
+    |> (fn {_, list} -> list |> reverse end).()
+  end
+
   def chunk_by(enumerable, fun) do
     [head|tail] = enumerable |> to_list
     tail

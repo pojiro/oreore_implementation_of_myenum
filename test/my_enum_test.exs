@@ -201,6 +201,12 @@ defmodule MyEnumTest do
     assert MyEnum.take([1,2,3], -1) == [3]
   end
 
+  test "take_every" do
+    assert MyEnum.take_every(1..10, 2) == [1, 3, 5, 7, 9]
+    assert MyEnum.take_every(1..10, 0) == []
+    assert MyEnum.take_every([1, 2, 3], 1) == [1, 2, 3]
+  end
+
   test "dedup/1" do
     assert MyEnum.dedup([1, 2, 3, 3, 2, 1]) == [1, 2, 3, 2, 1]
     assert MyEnum.dedup([1, 1, 2, 2.0, :three, :three]) == [1, 2, 2.0, :three]
