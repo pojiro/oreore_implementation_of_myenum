@@ -344,6 +344,19 @@ defmodule MyEnum do
     |> (fn {_, list} -> list |> reverse end).()
   end
 
+  def take_while(enumerable, fun) do
+    enumerable
+    |> reduce_while([],
+         fn x, acc ->
+           cond do
+             fun.(x) -> {:cont, [x|acc]}
+             true -> {:halt, acc}
+           end
+         end
+       )
+    |> reverse
+  end
+
   def chunk_by(enumerable, fun) do
     [head|tail] = enumerable |> to_list
     tail
