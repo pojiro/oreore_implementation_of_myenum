@@ -533,6 +533,27 @@ defmodule MyEnum do
     end
   end
 
+  def split_while(enumerable, fun) do
+    index = find_index(enumerable, fn x -> !fun.(x) end)
+    cond do
+      index == nil -> {enumerable |> to_list, []}
+      true -> enumerable |> split(index)
+    end
+  end
+
+  def split_with(enumerable, fun) do
+    enumerable
+    |> reduce({[],[]},
+         fn x, acc={tl, fl} ->
+           cond do
+             fun.(x) -> {[x|tl],fl}
+             true -> {tl, [x|fl]}
+           end
+         end
+       )
+    |> (fn {tl, fl} -> {tl |> reverse, fl |> reverse} end).()
+  end
+
   # def zip(enumerable) do
   #   enumerable
   #   |> reduce([],

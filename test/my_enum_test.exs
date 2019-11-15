@@ -343,4 +343,17 @@ defmodule MyEnumTest do
     assert MyEnum.split([1, 2, 3], -5) == {[], [1, 2, 3]}
   end
 
+  test "split_while" do
+    assert MyEnum.split_while([1, 2, 3, 4], fn x -> x < 3 end) == {[1, 2], [3, 4]}
+    assert MyEnum.split_while([1, 2, 3, 4], fn x -> x < 0 end) == {[], [1, 2, 3, 4]}
+    assert MyEnum.split_while([1, 2, 3, 4], fn x -> x > 0 end) == {[1, 2, 3, 4], []}
+  end
+
+  test "split_with" do
+    assert MyEnum.split_with([5, 4, 3, 2, 1, 0], fn x -> rem(x, 2) == 0 end) == {[4, 2, 0], [5, 3, 1]}
+    assert MyEnum.split_with(%{a: 1, b: -2, c: 1, d: -3}, fn {_k, v} -> v < 0 end) == {[b: -2, d: -3], [a: 1, c: 1]}
+    assert MyEnum.split_with(%{a: 1, b: -2, c: 1, d: -3}, fn {_k, v} -> v > 50 end) == {[], [a: 1, b: -2, c: 1, d: -3]}
+    assert MyEnum.split_with(%{}, fn {_k, v} -> v > 50 end) == {[], []}
+  end
+
 end
