@@ -427,4 +427,14 @@ defmodule MyEnumTest do
     assert MyEnum.sort_by(["some", "kind", "of", "monster"], &{byte_size(&1), String.first(&1)}) == ["of", "kind", "some", "monster"]
   end
 
+  test "zip/1" do
+    assert MyEnum.zip([[1, 2, 3], [:a, :b, :c], ["foo", "bar", "baz"]]) == [{1, :a, "foo"}, {2, :b, "bar"}, {3, :c, "baz"}]
+    assert MyEnum.zip([[1, 2, 3, 4, 5], [:a, :b, :c]]) == [{1, :a}, {2, :b}, {3, :c}]
+  end
+
+  test "zip/2" do
+    assert MyEnum.zip([1, 2, 3], [:a, :b, :c]) == [{1, :a}, {2, :b}, {3, :c}]
+    assert MyEnum.zip([1, 2, 3, 4, 5], [:a, :b, :c]) == [{1, :a}, {2, :b}, {3, :c}]
+  end
+
 end

@@ -699,12 +699,31 @@ defmodule MyEnum do
     |> map(fn {e, _e_mapped} -> e end)
   end
 
-  # def zip(enumerable) do
-  #   enumerable
-  #   |> reduce([],
-  #        fn list, acc ->
-  #          list |> reduce({}, fn x, acc -> Tuple.append(acc, x) end)
-  #        end
-  #      )
-  # end
+  def zip(enumerables) do
+    min_len = enumerables |> map(fn x -> count(x) end) |> min
+    acc_init = 0..(min_len-1) |> map(fn x -> [] end)
+    enumerables
+    |> reduce(acc_init,
+         fn x, acc ->
+           x |> reduce({0, acc},
+                  fn y, {index, list} ->
+                    {index + 1, List.update_at(list, index,  &(&1 ++ [y]))}
+                  end
+                )
+             |> (fn {_, list} -> list end).()
+         end
+       )
+    |> map(fn x -> List.to_tuple(x) end)
+  end
+
+  def zip(enumerable1, enumerable2) do
+    enumerables = [enumerable1, enumerable2]
+    enumerables |> zip
+  end
+
+  def unzip(enumerable) do
+    list = enumerable |> to_list |> map(fn x -> Tuple.to_list(x) end)
+
+  end
+
 end
