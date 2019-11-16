@@ -69,7 +69,7 @@ defmodule MyEnum do
   def map_every(enumerable, nth, fun) when nth > 0 do
     enumerable
     |> reduce({0, []},
-         fn x, acc={index, list} ->
+         fn x, _acc={index, list} ->
            cond do
              rem(index, nth) == 0 -> {index+1, [fun.(x)|list]}
              true -> {index+1, [x|list]}
@@ -331,7 +331,7 @@ defmodule MyEnum do
     end
   end
 
-  def take_every(enumerable, 0), do: []
+  def take_every(_enumerable, 0), do: []
   def take_every(enumerable, nth) do
     enumerable
     |> reduce({0, []},
@@ -365,7 +365,7 @@ defmodule MyEnum do
   def drop(enumerable, amount) when amount >= 0 do
     enumerable
     |> reduce({0, []},
-         fn x, acc={index, list} ->
+         fn x, _acc={index, list} ->
            cond do
              index >= amount -> {index+1, [x|list]}
              true -> {index+1, list}
@@ -382,7 +382,7 @@ defmodule MyEnum do
   def drop_every(enumerable, nth) do
     enumerable
     |> reduce({0, []},
-         fn x, acc={index, list} ->
+         fn x, _acc={index, list} ->
            cond do
              rem(index, nth) == 0 -> {index+1, list}
              true -> {index+1, [x|list]}
@@ -423,7 +423,7 @@ defmodule MyEnum do
 
     enumerable
     |> reduce_while({0, []},
-         fn x, acc={index, list} ->
+         fn _x, acc={index, list} ->
            cond do
              index < c -> {:cont, {index + step, [slice(enumerable, index, count)|list]}}
              true -> {:halt, acc}
@@ -615,7 +615,7 @@ defmodule MyEnum do
   def split(enumerable, count) when count >=0 do
     enumerable
     |> reduce_while({[],[]},
-         fn x, acc={hl, tl} ->
+         fn x, _acc={hl, tl} ->
            cond do
              count(hl) >= count -> {:halt, {hl, enumerable |> slice(x-1..-1)}}
              true -> {:cont, {[x|hl], tl}}
@@ -643,7 +643,7 @@ defmodule MyEnum do
   def split_with(enumerable, fun) do
     enumerable
     |> reduce({[],[]},
-         fn x, acc={tl, fl} ->
+         fn x, _acc={tl, fl} ->
            cond do
              fun.(x) -> {[x|tl],fl}
              true -> {tl, [x|fl]}
@@ -701,7 +701,7 @@ defmodule MyEnum do
 
   def zip(enumerables) do
     min_len = enumerables |> map(fn x -> count(x) end) |> min
-    acc_init = 0..(min_len-1) |> map(fn x -> [] end)
+    acc_init = 0..(min_len-1) |> map(fn _x -> [] end)
     enumerables
     |> reduce(acc_init,
          fn x, acc ->
@@ -726,7 +726,7 @@ defmodule MyEnum do
     |> to_list
     |> map(fn x -> Tuple.to_list(x) end)
     |> reduce([[],[]],
-         fn zipped=[e0, e1], acc ->
+         fn _zipped=[e0, e1], acc ->
            acc
            |> List.update_at(0, &([e0|&1]))
            |> List.update_at(1, &([e1|&1]))
