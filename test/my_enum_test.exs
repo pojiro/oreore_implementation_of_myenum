@@ -401,4 +401,9 @@ defmodule MyEnumTest do
     assert MyEnum.split_with(%{}, fn {_k, v} -> v > 50 end) == {[], []}
   end
 
+  test "shuffle" do
+    :rand.seed(:exsplus, {101, 102, 103})
+    assert MyEnum.shuffle([1,2,3]) == [2,3,1]
+  end
+
 end

@@ -649,6 +649,15 @@ defmodule MyEnum do
     |> (fn {tl, fl} -> {tl |> reverse, fl |> reverse} end).()
   end
 
+  defp _shuffle([], acc), do: acc
+  defp _shuffle(list, acc) do
+     e = list |> random
+    _shuffle(list |> filter(fn x -> x != e end), [e|acc])
+  end
+  def shuffle(enumerable) do
+    _shuffle(enumerable |> to_list, [])
+  end
+
   # def zip(enumerable) do
   #   enumerable
   #   |> reduce([],
