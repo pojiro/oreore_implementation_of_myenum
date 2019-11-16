@@ -183,6 +183,7 @@ defmodule MyEnumTest do
       assert MyEnum.each(["some", "example"], fn x -> IO.puts(x) end)
     end
     assert capture_io(fun) == "some\nexample\n"
+    assert fun.() == :ok
   end
 
   test "uniq/1" do

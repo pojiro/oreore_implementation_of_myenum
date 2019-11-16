@@ -255,6 +255,7 @@ defmodule MyEnum do
 
   def each(enumerable, fun) do
     enumerable |> reduce(nil, fn x, _ -> fun.(x) end)
+    :ok
   end
 
   def uniq(enumerable) do
