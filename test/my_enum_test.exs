@@ -411,4 +411,20 @@ defmodule MyEnumTest do
     assert MyEnum.shuffle([1,2,3]) == [2,3,1]
   end
 
+  test "sort/1" do
+    assert MyEnum.sort([3, 2, 1]) == [1, 2, 3]
+  end
+
+  test "sort/2" do
+    assert MyEnum.sort([1, 2, 3], &(&1 >= &2)) == [3, 2, 1]
+    assert MyEnum.sort(["some", "kind", "of", "monster"], &(byte_size(&1) <= byte_size(&2))) == ["of", "some", "kind", "monster"]
+    assert MyEnum.sort(["some", "kind", "of", "monster"], &(byte_size(&1) < byte_size(&2))) == ["of", "kind", "some", "monster"]
+  end
+
+  #test "sort_by" do
+  #  assert MyEnum.sort_by(["some", "kind", "of", "monster"], &byte_size/1) == ["of", "some", "kind", "monster"]
+  #  assert MyEnum.sort_by(["some", "kind", "of", "monster"], &byte_size/1, &>=/2) == ["monster", "some", "kind", "of"]
+  #  assert MyEnum.sort_by(["some", "kind", "of", "monster"], &{byte_size(&1), String.first(&1)}) == ["of", "kind", "some", "monster"]
+  #end
+
 end

@@ -662,6 +662,41 @@ defmodule MyEnum do
     _shuffle(enumerable |> to_list, [])
   end
 
+  def sort(enumerable) do
+    enumerable |> to_list |> :lists.sort
+  end
+
+  # ２つの配列を一つにする
+  defp _merge([], [], acc, _fun), do: acc |> Enum.reverse
+  defp _merge(_l1=[h1|t1], [], acc, fun), do: _merge(t1, [], [h1|acc], fun)
+  defp _merge([], _l2=[h2|t2], acc, fun), do: _merge([], t2, [h2|acc], fun)
+  defp _merge(l1=[h1|t1], l2=[h2|t2], acc, fun) do
+    cond do
+      fun.(h1, h2) -> _merge(t1, l2, [h1|acc], fun)
+      true -> _merge(l1, t2, [h2|acc], fun)
+    end
+  end
+
+  defp _sort([], acc, _) when length(acc) == 1, do: acc
+  defp _sort([], acc, fun), do: acc |> _sort([], fun)
+  defp _sort([l|[]], acc, fun), do: [l|acc] |> _sort([], fun)
+  defp _sort([l1, l2|t], acc, fun) do
+    _sort(t, [_merge(l1, l2, [], fun) |acc], fun)
+  end
+
+  def sort(enumerable, fun) do
+    enumerable
+    |> Enum.map(fn x -> [x] end)
+    |> _sort([], fun)
+    |> (fn [x] -> x end).()
+  end
+
+  #def sort_by(enumerable, mapper, sorter \\ &<=/2) do
+  #  enumerable
+  #  |> map(mapper)
+  #  |> sort(sorter)
+  #end
+
   # def zip(enumerable) do
   #   enumerable
   #   |> reduce([],
