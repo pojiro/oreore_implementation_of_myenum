@@ -5,10 +5,6 @@ defmodule MyEnumTest do
 
   doctest MyEnum
 
-  test "greets the world" do
-    assert MyEnum.hello() == :world
-  end
-
   test "reduce/3" do
     assert MyEnum.reduce([1,2,3], 0, &(&1+&2)) == 6
   end

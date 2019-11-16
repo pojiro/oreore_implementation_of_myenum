@@ -1,20 +1,8 @@
 defmodule MyEnum do
   @moduledoc """
   Documentation for MyEnum.
+  This module is OreOre Enum Implementation.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> MyEnum.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 
   def reduce([], acc , _), do: acc
   def reduce([h|t], acc, fun), do: reduce(t, fun.(h, acc), fun)

@@ -1,21 +1,25 @@
 # MyEnum
 
-**TODO: Add description**
+This MyEnum module is OreOre Implementation of Enum module.
 
-## Installation
+このMyEnumモジュールはEnum moduleのオレオレ実装です。
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `my_enum` to your list of dependencies in `mix.exs`:
+## 目的
 
-```elixir
-def deps do
-  [
-    {:my_enum, "~> 0.1.0"}
-  ]
-end
-```
+以下を目的として実装しました。
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/my_enum](https://hexdocs.pm/my_enum).
+- Enumモジュールの理解を深める
+- reduceの使い方の理解を深める
+- Elixirの書き力の向上
 
+## 実装後記
+
+- mix test.watchによるTDDはすばらしく、無いと辛いと思うようになりました。
+- 最初に「こんなの書けねーよ」と思っていた関数が書けるようになったときの達成感が気持ちいいです。  
+  - 簡単な関数から実装することで習熟度が上がります。
+  - 習熟度の向上と実装した関数の組み合わせで、難しい関数が実装できます。
+    - そうはいっても辛いものもありました。でも根気強く頑張った。
+
+## まとめ
+
+コーディングドリルとしてオススメです！
