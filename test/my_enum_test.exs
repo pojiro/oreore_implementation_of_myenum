@@ -212,6 +212,11 @@ defmodule MyEnumTest do
     assert MyEnum.take_while([1, 2, 3], fn x -> x < 3 end) == [1, 2]
   end
 
+  test "take_random" do
+    :rand.seed(:exsplus, {101, 102, 103})
+    assert MyEnum.take_random(1..10, 2) == [9,4]
+  end
+
   test "drop" do
     assert MyEnum.drop([1, 2, 3], 2) == [3]
     assert MyEnum.drop([1, 2, 3], 10) == []

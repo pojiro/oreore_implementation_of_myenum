@@ -358,6 +358,10 @@ defmodule MyEnum do
     |> reverse
   end
 
+  def take_random(enumerable, count) do
+    enumerable |> shuffle |> take(count)
+  end
+
   def drop(enumerable, amount) when amount >= 0 do
     enumerable
     |> reduce({0, []},
