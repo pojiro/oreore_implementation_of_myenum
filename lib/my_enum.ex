@@ -438,6 +438,25 @@ defmodule MyEnum do
     chunk_every(enumerable, count, count)
   end
 
+  def chunk_while(enumerable, acc, chunk_fun, after_fun) do
+    enumerable
+    |> reduce_while([acc],
+         fn x, _acc=[h|t] ->
+           case chunk_fun.(x, h) do
+             {:cont, chunk, new_acc_init} -> {:cont, [new_acc_init, chunk|t]}
+             {:cont, chunk} -> {:cont, [chunk|t]}
+             {:halt, chunk} -> {:halt, [chunk|t]}
+           end
+         end
+       )
+    |> (fn [h|t] -> (t |> reverse) ++
+                    case after_fun.(h) do
+                      {:cont, _acc} -> []
+                      {:cont, element, _acc}  -> element
+                    end
+        end).()
+  end
+
   defp _find([], default, _fun, _index), do: {default, default, default}
   defp _find([h|t], default, fun, index) do
     value = fun.(h)

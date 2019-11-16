@@ -253,6 +253,21 @@ defmodule MyEnumTest do
     assert MyEnum.chunk_every([1, 2, 3, 4, 5], 2, 3, []) == [[1, 2], [4, 5]]
   end
 
+  test "chunk_while" do
+    chunk_fun = fn element, acc ->
+      if rem(element, 2) == 0 do
+        {:cont, Enum.reverse([element | acc]), []}
+      else
+        {:cont, [element | acc]}
+      end
+    end
+    after_fun = fn
+      [] -> {:cont, []}
+      acc -> {:cont, Enum.reverse(acc), []}
+    end
+     assert MyEnum.chunk_while(1..10, [], chunk_fun, after_fun) == [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]]
+  end
+
   test "find" do
     assert MyEnum.find([2, 4, 6], fn x -> rem(x, 2) == 1 end) == nil
     assert MyEnum.find([2, 4, 6], 0, fn x -> rem(x, 2) == 1 end) == 0
