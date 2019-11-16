@@ -437,4 +437,9 @@ defmodule MyEnumTest do
     assert MyEnum.zip([1, 2, 3, 4, 5], [:a, :b, :c]) == [{1, :a}, {2, :b}, {3, :c}]
   end
 
+  test "unzip" do
+    assert MyEnum.unzip([{:a, 1}, {:b, 2}, {:c, 3}]) == {[:a, :b, :c], [1, 2, 3]}
+    assert MyEnum.unzip(%{a: 1, b: 2}) == {[:a, :b], [1, 2]}
+  end
+
 end

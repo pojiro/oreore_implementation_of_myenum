@@ -722,8 +722,18 @@ defmodule MyEnum do
   end
 
   def unzip(enumerable) do
-    list = enumerable |> to_list |> map(fn x -> Tuple.to_list(x) end)
-
+    enumerable
+    |> to_list
+    |> map(fn x -> Tuple.to_list(x) end)
+    |> reduce([[],[]],
+         fn zipped=[e0, e1], acc ->
+           acc
+           |> List.update_at(0, &([e0|&1]))
+           |> List.update_at(1, &([e1|&1]))
+         end
+       )
+    |> map(fn x -> reverse(x) end)
+    |> List.to_tuple
   end
 
 end
