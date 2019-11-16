@@ -671,8 +671,11 @@ defmodule MyEnum do
   defp _merge(_l1=[h1|t1], [], acc, fun), do: _merge(t1, [], [h1|acc], fun)
   defp _merge([], _l2=[h2|t2], acc, fun), do: _merge([], t2, [h2|acc], fun)
   defp _merge(l1=[h1|t1], l2=[h2|t2], acc, fun) do
+    {_e1, e_mapped1} = h1
+    {_e2, e_mapped2} = h2
+
     cond do
-      fun.(h1, h2) -> _merge(t1, l2, [h1|acc], fun)
+      fun.(e_mapped1, e_mapped2) -> _merge(t1, l2, [h1|acc], fun)
       true -> _merge(l1, t2, [h2|acc], fun)
     end
   end
@@ -685,17 +688,16 @@ defmodule MyEnum do
   end
 
   def sort(enumerable, fun) do
-    enumerable
-    |> Enum.map(fn x -> [x] end)
-    |> _sort([], fun)
-    |> (fn [x] -> x end).()
+    sort_by(enumerable, fn x -> x end, fun)
   end
 
-  #def sort_by(enumerable, mapper, sorter \\ &<=/2) do
-  #  enumerable
-  #  |> map(mapper)
-  #  |> sort(sorter)
-  #end
+  def sort_by(enumerable, mapper, sorter \\ &<=/2) do
+    enumerable
+    |> map(fn x -> [{x, mapper.(x)}] end)
+    |> _sort([], sorter)
+    |> (fn [x] -> x end).()
+    |> map(fn {e, _e_mapped} -> e end)
+  end
 
   # def zip(enumerable) do
   #   enumerable
